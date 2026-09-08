@@ -1,51 +1,37 @@
-import React from 'react';
-import { Layout, Menu, Typography, Card, Statistic, Row, Col } from 'antd';
-import { UserOutlined, CrownOutlined, DollarOutlined, LogoutOutlined } from '@ant-design/icons';
-import { useNavigate, Routes, Route } from 'react-router-dom';
+import { Layout, Menu, Typography } from 'antd';
+import { UserOutlined, DashboardOutlined, LogoutOutlined, MailOutlined } from '@ant-design/icons';
+import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
+import api from '../services/api';
+import { setAccessToken } from '../services/authToken';
+import DashboardHome from './DashboardHome';
+import Users from './Users';
+import UserDetail from './UserDetail';
+import InviteCodes from './InviteCodes';
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;
 
-function DashboardHome() {
-  return (
-    <div>
-      <Title level={4}>Dashboard</Title>
-      <Row gutter={16} style={{ marginTop: 16 }}>
-        <Col span={8}>
-          <Card>
-            <Statistic title="Total de Usuários" value={0} prefix={<UserOutlined />} />
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card>
-            <Statistic title="Assinantes Premium" value={0} prefix={<CrownOutlined />} />
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card>
-            <Statistic title="Receita Mensal" value={0} prefix="R$" precision={2} />
-          </Card>
-        </Col>
-      </Row>
-      <p style={{ marginTop: 24, color: '#9E9E9E' }}>
-        Dashboard completo será implementado na Etapa 9.
-      </p>
-    </div>
-  );
-}
-
 export default function Dashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const menuItems = [
-    { key: '/', icon: <DollarOutlined />, label: 'Dashboard' },
+    { key: '/', icon: <DashboardOutlined />, label: 'Dashboard' },
     { key: '/users', icon: <UserOutlined />, label: 'Usuários' },
+    { key: '/invite-codes', icon: <MailOutlined />, label: 'Convites' },
     { key: '/logout', icon: <LogoutOutlined />, label: 'Sair' },
   ];
 
-  const handleMenu = ({ key }: { key: string }) => {
+  // A rota de detalhe (/users/:id) não tem item próprio no menu — mantém
+  // "Usuários" destacado enquanto o admin está vendo o detalhe de alguém.
+  const selectedKey = location.pathname.startsWith('/users') ? '/users' : location.pathname;
+
+  const handleMenu = async ({ key }: { key: string }) => {
     if (key === '/logout') {
-      localStorage.removeItem('@autogestor-admin:token');
+      try {
+        await api.post('/auth/logout', {});
+      } catch {}
+      setAccessToken(null);
       navigate('/login');
     } else {
       navigate(key);
@@ -61,7 +47,7 @@ export default function Dashboard() {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={['/']}
+          selectedKeys={[selectedKey]}
           items={menuItems}
           onClick={handleMenu}
         />
@@ -75,6 +61,9 @@ export default function Dashboard() {
         <Content style={{ margin: 24, padding: 24, background: '#fff', borderRadius: 8 }}>
           <Routes>
             <Route path="/" element={<DashboardHome />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/users/:id" element={<UserDetail />} />
+            <Route path="/invite-codes" element={<InviteCodes />} />
           </Routes>
         </Content>
       </Layout>
