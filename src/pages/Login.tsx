@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Input, Button, Card, Typography, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { setAccessToken } from '../services/authToken';
 
 const { Title } = Typography;
 
@@ -13,7 +14,7 @@ export default function Login() {
     setLoading(true);
     try {
       const { data } = await api.post('/auth/login', values);
-      localStorage.setItem('@autogestor-admin:token', data.accessToken);
+      setAccessToken(data.accessToken);
       navigate('/');
     } catch {
       message.error('Email ou senha inválidos');
