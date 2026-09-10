@@ -12,8 +12,8 @@ export const PLANO_LABEL: Record<Plano, string> = {
 
 export const PLANO_COLOR: Record<Plano, string> = {
   gratuito: 'default',
-  premium_mensal: 'green',
-  premium_anual: 'gold',
+  premium_mensal: 'blue',
+  premium_anual: 'green',
 };
 
 export function isPremium(plano: Plano): boolean {

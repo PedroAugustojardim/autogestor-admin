@@ -44,9 +44,22 @@ export default function DashboardHome() {
         </Col>
         <Col span={6}>
           <Card>
+            <Statistic title="Assinantes Premium" value={stats.assinantes.total} prefix={<CrownOutlined />} />
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card>
+            <Statistic title="Receita mensal" value={formatBRL(stats.receita.mensal)} prefix="R$" />
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card>
             <Statistic title="Novos este mês" value={stats.usuarios.novosNoMes} prefix={<RiseOutlined />} />
           </Card>
         </Col>
+      </Row>
+
+      <Row gutter={16} style={{ marginTop: 16 }}>
         <Col span={6}>
           <Card>
             <Statistic title="Ativos (7 dias)" value={stats.usuarios.ativos7Dias} />
@@ -57,22 +70,9 @@ export default function DashboardHome() {
             <Statistic title="Ativos (30 dias)" value={stats.usuarios.ativos30Dias} />
           </Card>
         </Col>
-      </Row>
-
-      <Row gutter={16} style={{ marginTop: 16 }}>
-        <Col span={6}>
-          <Card>
-            <Statistic title="Assinantes Premium" value={stats.assinantes.total} prefix={<CrownOutlined />} />
-          </Card>
-        </Col>
         <Col span={6}>
           <Card>
             <Statistic title="Taxa de conversão" value={stats.assinantes.taxaConversao} suffix="%" />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic title="Receita mensal" value={formatBRL(stats.receita.mensal)} prefix="R$" />
           </Card>
         </Col>
         <Col span={6}>

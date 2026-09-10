@@ -3,6 +3,7 @@ import { Typography, Table, Input, Tag, Button, Popconfirm, Space, message, Sele
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { PLANO_LABEL, Plano } from '../utils/plano';
+import { colors } from '../theme';
 
 const { Title } = Typography;
 const { Search } = Input;
@@ -93,13 +94,23 @@ export default function Users() {
       <Table
         rowKey="id"
         loading={loading}
+        size="middle"
         dataSource={items}
         pagination={{ current: page, pageSize: PAGE_SIZE, total, onChange: setPage, showSizeChanger: false }}
         columns={[
           {
             title: 'Nome', dataIndex: 'name', key: 'name',
             render: (name: string, row: UserRow) => (
-              <a onClick={() => navigate(`/users/${row.id}`)}>{name}</a>
+              <a onClick={() => navigate(`/users/${row.id}`)} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{
+                  width: 30, height: 30, borderRadius: '50%', background: colors.surfaceAlt,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: 11.5, fontWeight: 700, color: colors.textPrimary, flexShrink: 0,
+                }}>
+                  {name.split(' ').filter(Boolean).slice(0, 2).map((p) => p[0]).join('').toUpperCase()}
+                </span>
+                {name}
+              </a>
             ),
           },
           { title: 'Email', dataIndex: 'email', key: 'email' },
